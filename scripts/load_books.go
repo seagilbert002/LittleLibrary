@@ -92,8 +92,6 @@ func main() {
             fmt.Printf("Error inserting record (%v): %v\n", record, err)
             continue
         }
-
-        fmt.Printf("Inserted: %v\n", record)
     }
     fmt.Println("CSV Successfully loaded")
 }
