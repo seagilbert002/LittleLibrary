@@ -1,1 +1,44 @@
-<h1>Books Page</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publish Date</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            <tr>
+                <td>{{ .title }}</td>
+                <td>{{ .author }}</td>
+                <td>{{ .publishDate }}</td>
+                <td>{{ .location }}</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+    <a href="/books/add">Add a Book</a>
+</body>
+</html>
