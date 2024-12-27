@@ -2,15 +2,10 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
     "strconv"
 )
-
-type Server struct {
-    DB *sql.DB
-}
 
 type Book struct {
     Title           string
@@ -35,14 +30,14 @@ type Book struct {
 }
 
 // A handler for the homepage
-func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
+func IndexHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     tmpl, _ := template.ParseFiles("templates/index.html")
     tmpl.Execute(w, nil)
 }
 
 // Handles the books page for displaying the books in the database
-func (s *Server) BooksHandler(w http.ResponseWriter, r *http.Request) {
-    rows, err := s.DB.Query("SELECT id, title, author, publish_date, location FROM books")
+func  BooksHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+    rows, err := db.Query("SELECT id, title, author, publish_date, location FROM books")
     if err != nil {
         http.Error(w, "Error fetching books", http.StatusInternalServerError)
         return
@@ -56,7 +51,6 @@ func (s *Server) BooksHandler(w http.ResponseWriter, r *http.Request) {
         rows.Scan(&id, &title, &author, &publishDate, &location)
 
         books = append(books, map[string]string {
-            "id":           fmt.Sprint(id),
             "title":        title,
             "author":       author,
             "publishDate":  publishDate,
@@ -73,7 +67,7 @@ func (s *Server) BooksHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // A handler for adding a book to the database
-func (s *Server) AddBookHandler(w http.ResponseWriter, r *http.Request) {
+func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     if r.Method == http.MethodGet {
         tmpl, err := template.ParseFiles("templates/add_book.html")
         if err != nil {
@@ -136,7 +130,7 @@ func (s *Server) AddBookHandler(w http.ResponseWriter, r *http.Request) {
             Location:     location,
         }
 
-        err = insertBook(s.DB, book)
+        err = insertBook(db, book)
         if err != nil {
             http.Error(w, "Error inserting book", http.StatusInternalServerError)
             return

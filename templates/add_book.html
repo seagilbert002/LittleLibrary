@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add Book</title>
+    </head>
+    <body>
+        <h1>Add Book</h1>
+        <form method="POST" action="/books/add">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required><br><br>
+
+            <label for="author">Author (Separate First and Last Name below):</label>
+            <input type="text" id="author" name="author"><br><br>
+
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name"><br><br>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name"><br><br>
+
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre"><br><br>
+
+            <label for="series">Series:</label>
+            <input type="text" id="series" name="series"><br><br>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+
+            <label for="publish_date">Publish Date:</label>
+            <input type="date" id="publish_date" name="publish_date"><br><br>
+
+            <label for="publisher">Publisher:</label>
+            <input type="text" id="publisher" name="publisher"><br><br>
+
+            <label for="ean_isbn">EAN/ISBN:</label>
+            <input type="text" id="ean_isbn" name="ean_isbn"><br><br>
+
+            <label for="upc_isbn">UPC/ISBN:</label>
+            <input type="text" id="upc_isbn" name="upc_isbn"><br><br>
+
+            <label for="pages">Pages:</label>
+            <input type="number" id="pages" name="pages" required><br><br>
+
+            <label for="ddc">DDC:</label>
+            <input type="text" id="ddc" name="ddc"><br><br>
+
+            <label for="cover_style">Cover Style:</label>
+            <input type="text" id="cover_style" name="cover_style"><br><br>
+
+            <label for="sprayed_edges">Sprayed Edges:</label>
+            <input type="checkbox" id="sprayed_edges" name="sprayed_edges"><br><br>
+
+            <label for="special_ed">Special Edition:</label>
+            <input type="checkbox" id="special_ed" name="special_ed"><br><br>
+
+            <label for="first_ed">First Edition:</label>
+            <input type="checkbox" id="first_ed" name="first_ed"><br><br>
+
+            <label for="signed">Signed:</label>
+            <input type="checkbox" id="signed" name="signed"><br><br>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required><br><br>
+
+            <input type="submit" value="Add Book">
+        </form>
+    </body>
+</html>

@@ -20,12 +20,10 @@ func main() {
     }
     defer db.Close()
 
-    // creates the server
-    server := &handlers.Server{DB: db}
-
     // Defines roots
-    http.HandleFunc("/", server.IndexHandler)
-    http.HandleFunc("/books", server.BooksHandler)
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){handlers.IndexHandler(db, w, r)})
+    http.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request){handlers.BooksHandler(db, w, r)})
+    http.HandleFunc("/book/add", func(w http.ResponseWriter, r *http.Request){handlers.AddBookHandler(db, w, r)})
 
     // Lets the admin know the server is running
     fmt.Println("Server running on http://localhost:8080")
