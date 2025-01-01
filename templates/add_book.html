@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>Add Book</h1>
-        <form method="POST" action="/books/add">
+        <form method="POST">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required><br><br>
 
@@ -46,7 +46,12 @@
             <input type="text" id="ddc" name="ddc"><br><br>
 
             <label for="cover_style">Cover Style:</label>
-            <input type="text" id="cover_style" name="cover_style"><br><br>
+            <select id="cover_style" name="cover_style">
+                <option value="">Select Cover Style</option> <--- Default option
+                <option value="Paperback">Paperback</option>
+                <option value="Hardback">Hardback</option>
+                <option value="Other">Other</option>
+            </select><br><br>
 
             <label for="sprayed_edges">Sprayed Edges:</label>
             <input type="checkbox" id="sprayed_edges" name="sprayed_edges"><br><br>

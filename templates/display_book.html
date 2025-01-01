@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ .Title }} - Details</title>
+    </head>
+    <body>
+        <h1>{{ .Title }}</h1>
+        {{ if .Author }}
+        <p><strong>Author:</strong> {{ .Author }}</p>
+        {{ end }}
+
+        {{ if .AuthorFirst }}
+        <p><strong>Author First Name:</strong> {{ .AuthorFirst }}</p>
+        {{ end }}
+
+        {{ if .AuthorLast }}
+        <p><strong>Author Last Name:</strong> {{ .AuthorLast }}</p>
+        {{ end }}
+
+        {{ if .Genre }}
+        <p><strong>Genre:</strong> {{ .Genre }}</p>
+        {{ end }}
+
+        {{ if .Series }}
+        <p><strong>Series:</strong> {{ .Series }}</p>
+        {{ end }}
+
+        {{ if .Description }}
+        <p><strong>Description:</strong> {{ .Description }}</p>
+        {{ end }}
+
+        {{ if .PublishDate }}
+        <p><strong>Publish Date:</strong> {{ .PublishDate }}</p>
+        {{ end }}
+
+        {{ if .Publisher }}
+        <p><strong>Publisher:</strong> {{ .Publisher }}</p>
+        {{ end }}
+
+        {{ if .EanIsbn }}
+        <p><strong>EAN/ISBN:</strong> {{ .EanIsbn }}</p>
+        {{ end }}
+
+        {{ if .UpcIsbn }}
+        <p><strong>UPC/ISBN:</strong> {{ .UpcIsbn }}</p>
+        {{ end }}
+
+        {{ if .Pages }}
+        <p><strong>Pages:</strong> {{ .Pages }}</p>
+        {{ end }}
+
+        {{ if .Ddc }}
+        <p><strong>DDC:</strong> {{ .Ddc }}</p>
+        {{ end }}
+
+        {{ if .CoverStyle }}
+        <p><strong>Cover Style:</strong> {{ .CoverStyle }}</p>
+        {{ end }}
+
+        {{ if .SprayedEdges }}
+        <p><strong>Sprayed Edges:</strong> {{ .SprayedEdges }}</p>
+        {{ end }}
+
+        {{ if .SpecialEd }}
+        <p><strong>Special Edition:</strong> {{ .SpecialEd }}</p>
+        {{ end }}
+
+        {{ if .FirstEd }}
+        <p><strong>First Edition:</strong> {{ .FirstEd }}</p>
+        {{ end }}
+
+        {{ if .Signed }}
+        <p><strong>Signed:</strong> {{ .Signed }}</p>
+        {{ end }}
+
+        {{ if .Location }}
+        <p><strong>Location:</strong> {{ .Location }}</p>
+        {{ end }}
+
+    </body>
+</html>
+

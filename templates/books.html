@@ -31,7 +31,7 @@
         <tbody>
             {{ range . }}
             <tr>
-                <td>{{ .title }}</td>
+                <td><a href="/display_book/{{ .id }}">{{ .title }}</a></td>
                 <td>{{ .author }}</td>
                 <td>{{ .publishDate }}</td>
                 <td>{{ .location }}</td>
@@ -39,6 +39,6 @@
             {{ end }}
         </tbody>
     </table>
-    <a href="/books/add">Add a Book</a>
+    <a href="/book/add">Add a Book</a>
 </body>
 </html>

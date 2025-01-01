@@ -14,6 +14,7 @@ import (
 
 func main() {
     // initialize Database
+    hostPort := "8080"
     db, err := initializeDB()
     if err != nil {
         log.Fatalf("Could not connect to database: %v", err)
@@ -24,10 +25,11 @@ func main() {
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){handlers.IndexHandler(db, w, r)})
     http.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request){handlers.BooksHandler(db, w, r)})
     http.HandleFunc("/book/add", func(w http.ResponseWriter, r *http.Request){handlers.AddBookHandler(db, w, r)})
+    http.HandleFunc("/display_book/", func(w http.ResponseWriter, r *http.Request){handlers.BookDisplayHandler(db, w, r)})
 
     // Lets the admin know the server is running
-    fmt.Println("Server running on http://localhost:8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    fmt.Println("Server running on http://localhost:" + hostPort)
+    log.Fatal(http.ListenAndServe(":" + hostPort, nil))
 }
 
 // Initialization creates and returns a new database Connection

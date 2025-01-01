@@ -3,8 +3,10 @@ package handlers
 import (
 	"database/sql"
 	"html/template"
+	"log"
 	"net/http"
-    "strconv"
+	"strconv"
+	"strings"
 )
 
 type Book struct {
@@ -19,7 +21,7 @@ type Book struct {
     Publisher       string
     EanIsbn         string
     UpcIsbn         string
-    Pages           int
+    Pages           uint16 
     Ddc             string
     CoverStyle      string
     SprayedEdges    bool
@@ -31,12 +33,14 @@ type Book struct {
 
 // A handler for the homepage
 func IndexHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+    log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
     tmpl, _ := template.ParseFiles("templates/index.html")
     tmpl.Execute(w, nil)
 }
 
 // Handles the books page for displaying the books in the database
 func  BooksHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+    log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
     rows, err := db.Query("SELECT id, title, author, publish_date, location FROM books")
     if err != nil {
         http.Error(w, "Error fetching books", http.StatusInternalServerError)
@@ -46,11 +50,11 @@ func  BooksHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
     var books []map[string]string
     for rows.Next() {
-        var id int
-        var title, author, publishDate, location string
+        var id, title, author, publishDate, location string
         rows.Scan(&id, &title, &author, &publishDate, &location)
 
         books = append(books, map[string]string {
+            "id":           id,
             "title":        title,
             "author":       author,
             "publishDate":  publishDate,
@@ -68,6 +72,7 @@ func  BooksHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 // A handler for adding a book to the database
 func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+    log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
     if r.Method == http.MethodGet {
         tmpl, err := template.ParseFiles("templates/add_book.html")
         if err != nil {
@@ -79,6 +84,7 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
         err := r.ParseForm()
         if err != nil {
             http.Error(w, "Error parsing book form", http.StatusBadRequest)
+            log.Printf("Error parsing bookform: %v ", err)
             return
         }
         title :=        r.FormValue("title")
@@ -101,12 +107,23 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
         signed :=       r.FormValue("signed") == "on"
         location :=     r.FormValue("location")
 
+        // Validation and Default values
+        var errors []string
+
+        if strings.TrimSpace(title) == "" {
+            errors = append(errors, "Title is required")
+        }
+        if strings.TrimSpace(author) == "" {
+            errors = append(errors, "Author is required") 
+        }
+
         // Converting the pages to int
-        pages, err := strconv.Atoi(pagesStr)
+        pages, err := strconv.ParseUint(pagesStr, 10, 16)
         if err != nil {
             http.Error(w, "Invalid pages value", http.StatusBadRequest)
             return
         }
+    
 
         book := Book{
             Title:        title,
@@ -120,7 +137,7 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
             Publisher:    publisher,
             EanIsbn:      eanIsbn,
             UpcIsbn:      upcIsbn,
-            Pages:        pages,
+            Pages:        uint16(pages),
             Ddc:          ddc,
             CoverStyle:   coverStyle,
             SprayedEdges: sprayedEdges,
@@ -141,12 +158,80 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func insertBook(db *sql.DB, book Book) error {
-    stmt, err := db.Prepare("INSERT INTO books (title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    stmt, err := db.Prepare("INSERT INTO books (title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, pages, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     if err != nil {
+        log.Printf("Error preparing statement: %v", err)
         return err
     }
     defer stmt.Close()
 
-    _, err = stmt.Exec(book.Title, book.Author, book.AuthorFirst, book.AuthorLast, book.Genre, book.Series, book.Description, book.PublishDate, book.Publisher, book.EanIsbn, book.UpcIsbn, book.CoverStyle, book.SprayedEdges, book.SpecialEd, book.FirstEd, book.Signed, book.Location)
-    return err
+    result, err := stmt.Exec(
+        book.Title, 
+        book.Author, 
+        book.AuthorFirst, 
+        book.AuthorLast, 
+        book.Genre, 
+        book.Series, 
+        book.Description, 
+        book.PublishDate, 
+        book.Publisher, 
+        book.EanIsbn, 
+        book.UpcIsbn, 
+        book.Pages, 
+        book.Ddc,
+        book.CoverStyle, 
+        book.SprayedEdges, 
+        book.SpecialEd, 
+        book.FirstEd, 
+        book.Signed, 
+        book.Location,
+    )
+    if err != nil {
+        log.Printf("Book Insert Failed: %v", err)
+        return err
+    }
+
+    insertedId, err := result.LastInsertId()
+    if err != nil {
+        log.Printf("Error getting inserted ID: %v", err)
+        return err
+    }
+    log.Printf("Book Inserted with ID: %d", insertedId)
+    return nil
+}
+
+func BookDisplayHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+    log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
+    bookIdStr := strings.TrimPrefix(r.URL.Path, "/display_book/")
+    bookId, err := strconv.Atoi(bookIdStr)
+    if err != nil {
+        http.Error(w, "Invalid book ID", http.StatusBadRequest)
+        return
+    }
+
+    row := db.QueryRow("SELECT title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, pages, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location FROM books WHERE id = ?", bookId)
+    var book Book
+    err = row.Scan(&book.Title, &book.Author, &book.AuthorFirst, &book.AuthorLast, &book.Genre, &book.Series, &book.Description, &book.PublishDate, &book.Publisher, &book.EanIsbn, &book.UpcIsbn, &book.Pages, &book.Ddc, &book.CoverStyle, &book.SprayedEdges, &book.SpecialEd, &book.FirstEd, &book.Signed, &book.Location)
+    if err == sql.ErrNoRows {
+        http.Error(w, "Book not found", http.StatusNotFound)
+        return
+    } else if err != nil {
+        log.Printf("Error querying database: %v", err)
+        http.Error(w, "Database error", http.StatusBadRequest)
+        return
+    }
+
+    tmpl, err := template.ParseFiles("templates/display_book.html") // Parse the detail template
+    if err != nil {
+        log.Printf("Error parsing template: %v", err)
+        http.Error(w, "Error rendering template", http.StatusInternalServerError)
+        return
+    }
+
+    err = tmpl.Execute(w, book) // Execute the template with book data
+    if err != nil {
+        log.Printf("Error executing template: %v", err)
+        http.Error(w, "Error executing template", http.StatusInternalServerError)
+        return
+    }
 }
