@@ -1,1 +1,1 @@
-The Little Library is a project that I am building for my wife that can be a place for her to track her ever growing book collection. It is made in Go, MySQL, and uses HTMX. I chose to build it without a major framework to increase my understanding of http and https connections.
+The Little Library is a project that I am building for my wife that can be a place for her to track her ever growing book collection. It is made in Go, MySQL, and will use HTMX. I chose to build it without a major framework to increase my understanding of http and https connections.
