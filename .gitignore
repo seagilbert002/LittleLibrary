@@ -40,3 +40,5 @@ tmp
 # My files #
 ####################
 temp/
+.air.toml
+.DS_Store
