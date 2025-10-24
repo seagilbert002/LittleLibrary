@@ -7,13 +7,14 @@ import (
     "net/http"
     "os"
 
-    "github.com/seagilbert002/LittleLibrary/handlers"
+    "github.com/seagilbert002/LittleLibrary/internal/handlers"
     "github.com/go-sql-driver/mysql"
 )
 
 
 func main() {
     // initialize Database
+	// TODO: use .env variables for more secure connections
     hostPort := "8080"
     db, err := initializeDB()
     if err != nil {
@@ -32,6 +33,8 @@ func main() {
     log.Fatal(http.ListenAndServe(":" + hostPort, nil))
 }
 
+// TODO: Move to db class
+// TODO: Create .env variable to pull from
 // Initialization creates and returns a new database Connection
 func initializeDB() (*sql.DB, error) {
     // Connection properties

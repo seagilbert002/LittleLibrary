@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+//TODO: Create a separate Book model .go file
 type Book struct {
     Title           string
     Author          string
@@ -31,6 +32,7 @@ type Book struct {
     Location        string
 }
 
+// TODO: Make a seaparate handler for the index page
 // A handler for the homepage
 func IndexHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
@@ -70,6 +72,8 @@ func  BooksHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     tmpl.Execute(w, books)
 }
 
+// TODO: Make a separate handler for the books 
+// TODO: Sanitize input for better security
 // A handler for adding a book to the database
 func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
@@ -157,6 +161,7 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     }
 }
 
+// TODO: Move to db interactions file perhaps
 func insertBook(db *sql.DB, book Book) error {
     stmt, err := db.Prepare("INSERT INTO books (title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, pages, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     if err != nil {
@@ -200,6 +205,7 @@ func insertBook(db *sql.DB, book Book) error {
     return nil
 }
 
+// TODO: Create a separate handler file for this and figure out how to properly display the book
 func BookDisplayHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
     bookIdStr := strings.TrimPrefix(r.URL.Path, "/display_book/")
