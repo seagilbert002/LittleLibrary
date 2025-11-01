@@ -7,8 +7,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-// TODO: Move to db class
-// TODO: Create .env variable to pull from
+// TODO: Add .env variable to pull from
 // Initialization creates and returns a new database Connection
 func InitializeDB() (*sql.DB, error) {
     // Connection properties

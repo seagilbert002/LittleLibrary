@@ -7,30 +7,10 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/seagilbert002/LittleLibrary/internal/models"
 )
 
-//TODO: Create a separate Book model .go file
-type Book struct {
-    Title           string
-    Author          string
-    AuthorFirst     string
-    AuthorLast      string
-    Genre           string
-    Series          string
-    Description     string
-    PublishDate     string
-    Publisher       string
-    EanIsbn         string
-    UpcIsbn         string
-    Pages           uint16 
-    Ddc             string
-    CoverStyle      string
-    SprayedEdges    bool
-    SpecialEd       bool
-    FirstEd         bool
-    Signed          bool
-    Location        string
-}
 
 // TODO: Make a seaparate handler for the index page
 // A handler for the homepage
@@ -40,6 +20,7 @@ func IndexHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     tmpl.Execute(w, nil)
 }
 
+// TODO: Separate db operations from BooksHandler
 // Handles the books page for displaying the books in the database
 func  BooksHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
@@ -129,7 +110,7 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
         }
     
 
-        book := Book{
+        book := models.Book{
             Title:        title,
             Author:       author,
             AuthorFirst:  authorFirst,
@@ -162,7 +143,7 @@ func AddBookHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 // TODO: Move to db interactions file perhaps
-func insertBook(db *sql.DB, book Book) error {
+func insertBook(db *sql.DB, book models.Book) error {
     stmt, err := db.Prepare("INSERT INTO books (title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, pages, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     if err != nil {
         log.Printf("Error preparing statement: %v", err)
@@ -216,7 +197,7 @@ func BookDisplayHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
     }
 
     row := db.QueryRow("SELECT title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, pages, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location FROM books WHERE id = ?", bookId)
-    var book Book
+    var book models.Book
     err = row.Scan(&book.Title, &book.Author, &book.AuthorFirst, &book.AuthorLast, &book.Genre, &book.Series, &book.Description, &book.PublishDate, &book.Publisher, &book.EanIsbn, &book.UpcIsbn, &book.Pages, &book.Ddc, &book.CoverStyle, &book.SprayedEdges, &book.SpecialEd, &book.FirstEd, &book.Signed, &book.Location)
     if err == sql.ErrNoRows {
         http.Error(w, "Book not found", http.StatusNotFound)
