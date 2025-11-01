@@ -2,13 +2,12 @@ package main
 
 import (
     "fmt"
-    "database/sql"
     "log"
     "net/http"
-    "os"
 
     "github.com/seagilbert002/LittleLibrary/internal/handlers"
-    "github.com/go-sql-driver/mysql"
+
+	"github.com/seagilbert002/LittleLibrary/internal/db"
 )
 
 
@@ -16,7 +15,7 @@ func main() {
     // initialize Database
 	// TODO: use .env variables for more secure connections
     hostPort := "8080"
-    db, err := initializeDB()
+    db, err := db.InitializeDB()
     if err != nil {
         log.Fatalf("Could not connect to database: %v", err)
     }
@@ -31,34 +30,6 @@ func main() {
     // Lets the admin know the server is running
     fmt.Println("Server running on http://localhost:" + hostPort)
     log.Fatal(http.ListenAndServe(":" + hostPort, nil))
-}
-
-// TODO: Move to db class
-// TODO: Create .env variable to pull from
-// Initialization creates and returns a new database Connection
-func initializeDB() (*sql.DB, error) {
-    // Connection properties
-    cfg := mysql.Config{
-        User:   os.Getenv("DBUSER"),
-        Passwd: os.Getenv("DBPASS"),
-        Net:    "tcp",
-        Addr:   "127.0.0.1:3306",
-        DBName: "little_library",
-    }
-
-    // Database handle
-    db, err := sql.Open("mysql", cfg.FormatDSN())
-    if err != nil {
-        return nil, err
-    }
-
-    //Double checks that data base is connected.
-    pingErr := db.Ping()
-    if pingErr != nil {
-        return nil, err
-    }
-    
-    return db, nil
 }
 
 
