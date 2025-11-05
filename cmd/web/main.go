@@ -16,11 +16,12 @@ import (
 
 
 func main() {
-    // initialize Database
+	// Loads in the environment variables
 	if err := godotenv.Load(); err != nil {
 		log.Println("WARNING: Could not find .env file. Reading system env variables.")
 	}
 
+	// Starts the database connection
     db, err := db.InitializeDB()
     if err != nil {
         log.Fatalf("Could not connect to database: %v", err)
