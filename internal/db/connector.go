@@ -12,11 +12,11 @@ import (
 func InitializeDB() (*sql.DB, error) {
     // Connection properties
     cfg := mysql.Config{
-        User:   os.Getenv("DBUSER"),
-        Passwd: os.Getenv("DBPASS"),
+        User:   os.Getenv("DB_USER"),
+        Passwd: os.Getenv("DB_PASSWORD"),
         Net:    "tcp",
-        Addr:   "127.0.0.1:3306",
-        DBName: "little_library",
+        Addr:   os.Getenv("DB_HOST"),
+        DBName: os.Getenv("DB_NAME"),
     }
 
     // Database handle

@@ -7,12 +7,16 @@ import (
 )
 
 type BookRepository struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
-func (r *BookRepository) DisplayAllBooks() ([]models.Book, error) {
+func NewSQLBookRepo(db *sql.DB) *BookRepository {
+	return &BookRepository{DB: db}
+}
+
+func (r *BookRepository) GetAllBooks() ([]models.Book, error) {
 	// SQL Query logic
-	rows, err := r.db.Query("SELECT id, title, author, publish_date, location FROM books")
+	rows, err := r.DB.Query("SELECT id, title, author, publish_date, location FROM books")
 	if err != nil {
 		log.Printf("Repository Error: Failed to query books: %v", err)
 		return nil, err
