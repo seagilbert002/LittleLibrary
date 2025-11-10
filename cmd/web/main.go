@@ -37,9 +37,11 @@ func main() {
 	catalogService := services.NewCatalogService(bookRepo)
 
 	// ----Handlers----
+	genralHandler := handlers.NewGeneralHandler()
 	bookHandler := handlers.NewBookHandler(catalogService)
 
 	// ***** Define Routes ******
+	http.HandleFunc("/", genralHandler.IndexHandler)
     http.HandleFunc("/books", bookHandler.BooksHanlder)
 
     // Defines roots
