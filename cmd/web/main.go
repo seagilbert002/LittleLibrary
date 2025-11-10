@@ -16,6 +16,7 @@ import (
 
 
 func main() {
+	// ****** Database Connections ******
 	// Loads in the environment variables
 	if err := godotenv.Load(); err != nil {
 		log.Println("WARNING: Could not find .env file. Reading system env variables.")
@@ -28,14 +29,17 @@ func main() {
     }
     defer db.Close()
 
-	// Wiring up layers
+	// ****** Wiring up layers *****
+	// ----Repositories----
 	bookRepo := repository.NewSQLBookRepo(db)
 
+	// ----Services----
 	catalogService := services.NewCatalogService(bookRepo)
 
+	// ----Handlers----
 	bookHandler := handlers.NewBookHandler(catalogService)
 
-	// Define Routes
+	// ***** Define Routes ******
     http.HandleFunc("/books", bookHandler.BooksHanlder)
 
     // Defines roots
