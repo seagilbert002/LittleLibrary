@@ -31,10 +31,10 @@
         <tbody>
             {{ range . }}
             <tr>
-                <td><a href="/display_book/{{ .id }}">{{ .title }}</a></td>
-                <td>{{ .author }}</td>
-                <td>{{ .publishDate }}</td>
-                <td>{{ .location }}</td>
+                <td><a href="/display_book/{{ .Id }}">{{ .Title }}</a></td>
+                <td>{{ .Author }}</td>
+                <td>{{ .PublishDate }}</td>
+                <td>{{ .Location }}</td>
             </tr>
             {{ end }}
         </tbody>

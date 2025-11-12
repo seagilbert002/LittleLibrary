@@ -18,7 +18,6 @@ func NewBookHandler(s *services.CatalogService) *BookHandler {
 	return &BookHandler{Catalog: s}
 }
 
-// TODO: Separate db operations from BooksHandler
 // Handles the books page for displaying the books in the database
 func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
