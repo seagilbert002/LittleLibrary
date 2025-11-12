@@ -27,7 +27,9 @@ func main() {
     if err != nil {
         log.Fatalf("Could not connect to database: %v", err)
     }
+	log.Println("Database Connection Successful")
     defer db.Close()
+
 
 	// ****** Wiring up layers *****
 	// ----Repositories----

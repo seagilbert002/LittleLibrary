@@ -2,14 +2,21 @@ package db
 
 import (
 	"database/sql"
+	"log"
 	"os"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
-// TODO: Add .env variable to pull from
 // Initialization creates and returns a new database Connection
 func InitializeDB() (*sql.DB, error) {
+	// Load in the .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("NOTE: Error loading .env file. Assuming environment variables are set.")
+	}
+
     // Connection properties
     cfg := mysql.Config{
         User:   os.Getenv("DB_USER"),
@@ -17,6 +24,7 @@ func InitializeDB() (*sql.DB, error) {
         Net:    "tcp",
         Addr:   os.Getenv("DB_HOST"),
         DBName: os.Getenv("DB_NAME"),
+		AllowNativePasswords: true,
     }
 
     // Database handle
@@ -28,8 +36,10 @@ func InitializeDB() (*sql.DB, error) {
     //Double checks that data base is connected.
     pingErr := db.Ping()
     if pingErr != nil {
-        return nil, err
+        return nil, pingErr
     }
+
+	log.Println("NOTE: Connected to LittleLibrary db")	
     
     return db, nil
 }
