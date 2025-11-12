@@ -37,4 +37,22 @@ func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
     tmpl.Execute(w, books)
 }
 
+// Handles displaying a single book
+func (h *BookHandler) BookDisplayHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
 
+	// Call the corresponding service
+	book, err := h.Catalog.GetBookById()
+	if err != nil {
+		http.Error(w, "Failed to load book", http.StatusInternalServerError)
+		return
+	}
+
+	// Render the template
+	tmpl, err := template.ParseFiles("web/templates/pages/display_book.html")
+	if err != nil {
+        http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		return
+	}
+	tmpl.Execute(w, book)
+}
