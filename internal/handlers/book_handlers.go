@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
+	"strconv"
 
 	"github.com/seagilbert002/LittleLibrary/internal/services"
 )
@@ -41,8 +43,16 @@ func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
 func (h *BookHandler) BookDisplayHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
 
+	// Get the requested book id
+	bookIdString := strings.TrimPrefix(r.URL.Path, "/display_book/")
+	bookId, err := strconv.Atoi(bookIdString)
+	if err != nil {
+		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		return
+	}
+
 	// Call the corresponding service
-	book, err := h.Catalog.GetBookById()
+	book, err := h.Catalog.GetBookById(bookId)
 	if err != nil {
 		http.Error(w, "Failed to load book", http.StatusInternalServerError)
 		return
