@@ -43,5 +43,6 @@ tmp
 .env
 holder.go
 temp/
+.air.toml
 data/
 TODO.md
