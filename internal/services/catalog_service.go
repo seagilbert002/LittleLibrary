@@ -6,7 +6,7 @@ import "github.com/seagilbert002/LittleLibrary/internal/models"
 type BookRepository interface {
 	GetAllBooks() ([]models.Book, error)
 	// TODO: AddBook
-	// TODO: GetBookById
+	GetBookById() (models.Book, error)
 }
 
 // Catalog Service struct for business logic
@@ -21,4 +21,11 @@ func NewCatalogService(repo BookRepository) *CatalogService {
 
 func (s *CatalogService) GetAllBooks() ([]models.Book, error) {
 	return s.Repo.GetAllBooks()
+}
+
+func (s *CatalogService) GetBookById(id int) (*models.Book, error) {
+	// Future authorization checks
+
+	// Pull from the repository
+	return s.Repo.GetBookById(id)
 }
