@@ -45,6 +45,7 @@ func main() {
 	// ***** Define Routes ******
 	http.HandleFunc("/", genralHandler.IndexHandler)
     http.HandleFunc("/books", bookHandler.BooksHanlder)
+	http.HandleFunc("/display_book/", bookHandler.BookDisplayHandler)
 
     // Defines roots
 //    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){handlers.IndexHandler(db, w, r)})

@@ -6,7 +6,7 @@ import "github.com/seagilbert002/LittleLibrary/internal/models"
 type BookRepository interface {
 	GetAllBooks() ([]models.Book, error)
 	// TODO: AddBook
-	GetBookById() (models.Book, error)
+	GetBookById(id int) (*models.Book, error)
 }
 
 // Catalog Service struct for business logic

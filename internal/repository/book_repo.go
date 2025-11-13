@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"log"
-	"net/http"
 
 	"github.com/seagilbert002/LittleLibrary/internal/models"
 )
