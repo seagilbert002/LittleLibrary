@@ -6,6 +6,7 @@ import "github.com/seagilbert002/LittleLibrary/internal/models"
 type BookRepository interface {
 	GetAllBooks() ([]models.Book, error)
 	// TODO: AddBook
+	AddBook(models.Book) (error)
 	GetBookById(id int) (*models.Book, error)
 }
 
@@ -28,4 +29,8 @@ func (s *CatalogService) GetBookById(id int) (*models.Book, error) {
 
 	// Pull from the repository
 	return s.Repo.GetBookById(id)
+}
+
+func (s *CatalogService) AddBook(book models.Book) (error) {
+	return s.Repo.AddBook(book)
 }
