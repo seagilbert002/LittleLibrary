@@ -15,7 +15,7 @@ func NewSQLBookRepo(db *sql.DB) *BookRepository {
 	return &BookRepository{DB: db}
 }
 
-// Function for returning all books in the database
+// FUNCTION: for returning all books in the database
 func (r *BookRepository) GetAllBooks() ([]models.Book, error) {
 	// SQL Query logic
 	rows, err := r.DB.Query("SELECT id, title, author, publish_date, location FROM books")
@@ -45,7 +45,7 @@ func (r *BookRepository) GetAllBooks() ([]models.Book, error) {
 	return books, nil
 }
 
-// Function for returning a single book
+// FUNCTION: for returning a single book
 func (r *BookRepository) GetBookById(id int) (*models.Book, error) {
 	var book models.Book
 	// SQL Query
@@ -57,4 +57,50 @@ func (r *BookRepository) GetBookById(id int) (*models.Book, error) {
 	}
 
 	return &book, nil
+}
+
+// FUNCTION: adding a book to the repo
+func (r *BookRepository) AddBook(book models.Book) (error) {
+	// Preps the statement for execution
+	stmt, err := r.DB.Prepare("INSERT INTO books (title, author, first_name, last_name, genre, series, description, publish_date, publisher, ean_isbn, upc_isbn, pages, ddc, cover_style, sprayed_edges, special_ed, first_ed, signed, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		log.Printf("Error preparing statement: %v", err)
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(
+		book.Title,
+		book.Author,
+		book.AuthorFirst,
+		book.AuthorLast,
+		book.Genre,
+		book.Series,
+		book.Description,
+		book.PublishDate,
+		book.Publisher,
+		book.EanIsbn,
+		book.UpcIsbn,
+		book.Pages,
+		book.Ddc,
+		book.CoverStyle,
+		book.SprayedEdges,
+		book.SpecialEd,
+		book.FirstEd,
+		book.Signed,
+		book.Location,
+	)
+
+	if err != nil {
+		log.Printf("Book Insertion Failed: %v", err)
+		return err
+	}
+
+	insertedId, err := result.LastInsertId()
+	if err != nil {
+		log.Printf("Error getting inserted ID: %v", err)
+		return err
+	}
+	log.Printf("Book Inserted with ID: %d", insertedId)
+	return nil
 }
