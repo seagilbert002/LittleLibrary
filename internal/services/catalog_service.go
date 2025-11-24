@@ -42,14 +42,11 @@ func (s *CatalogService) AddBook(bookData url.Values) error {
 	if bookData.Get("title") == "" {
 		return errors.New("book title is required")
 	}
-	if bookData.Get("author") == "" {
-		return errors.New("book author is required")
+	if bookData.Get("pages") == "" {
+		return errors.New("book page numbers is required")
 	}
-	if bookData.Get("first_name") == "" {
-		return errors.New("book First Name is required")
-	}
-	if bookData.Get("last_name") == "" {
-		return errors.New("book Last Name is required")
+	if bookData.Get("location") == "" {
+		return errors.New("book location is required")
 	}
 
 	// Transform data if needed here
