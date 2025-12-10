@@ -11,7 +11,6 @@ import (
 // Repository interface for calling to the database
 type BookRepository interface {
 	GetAllBooks() ([]models.Book, error)
-	// TODO: AddBook
 	AddBook(models.Book) (error)
 	GetBookById(id int) (*models.Book, error)
 }

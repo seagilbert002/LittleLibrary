@@ -48,11 +48,6 @@ func main() {
 	http.HandleFunc("/display_book/", bookHandler.BookDisplayHandler)
 	http.HandleFunc("/add_book", bookHandler.AddBookHandler)
 
-    // Defines roots
-//    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){handlers.IndexHandler(db, w, r)})
-  //  http.HandleFunc("/book/add", func(w http.ResponseWriter, r *http.Request){handlers.AddBookHandler(db, w, r)})
-    //http.HandleFunc("/display_book/", func(w http.ResponseWriter, r *http.Request){handlers.BookDisplayHandler(db, w, r)})
-
 	// RUN SERVER
     // Lets the admin know the server is running
 	hostPort := os.Getenv("HOST_PORT")
