@@ -39,6 +39,31 @@ func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
     tmpl.Execute(w, books)
 }
 
+// Handles deleting a book
+func (h *BookHandler) RemoveBookHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	
+	bookIDString := strings.TrimPrefix(r.URL.Path, "/remove_book/")
+	bookId, err := strconv.Atoi(bookIDString)
+	if err != nil {
+		http.Error(w, "Invalid book ID", http.StatusBadRequest)
+		return
+	}
+
+	err = h.Catalog.RemoveBook(bookId)
+	if err != nil {
+        log.Printf("Service error deleting book: %v", err)
+        http.Error(w, "Failed to delete book", http.StatusInternalServerError)
+        return
+    }
+
+	http.Redirect(w, r, "/books", http.StatusSeeOther)
+}
+
+
 // Handles displaying a single book
 func (h *BookHandler) BookDisplayHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
