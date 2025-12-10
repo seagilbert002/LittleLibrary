@@ -13,6 +13,7 @@ type BookRepository interface {
 	GetAllBooks() ([]models.Book, error)
 	AddBook(models.Book) (error)
 	GetBookById(id int) (*models.Book, error)
+	RemoveBook(id int) (error)
 }
 
 // Catalog Service struct for business logic
@@ -29,8 +30,15 @@ func (s *CatalogService) GetAllBooks() ([]models.Book, error) {
 	return s.Repo.GetAllBooks()
 }
 
+func (s *CatalogService) RemoveBook(id int) (error) {
+	// TODO: Authorization Checks
+
+	// Pass the id to the repository
+	return s.Repo.RemoveBook(id)
+}
+
 func (s *CatalogService) GetBookById(id int) (*models.Book, error) {
-	// Future authorization checks
+	// TODO: Future authorization checks
 
 	// Pull from the repository
 	return s.Repo.GetBookById(id)
