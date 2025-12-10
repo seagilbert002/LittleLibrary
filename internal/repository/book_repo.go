@@ -15,6 +15,28 @@ func NewSQLBookRepo(db *sql.DB) *BookRepository {
 	return &BookRepository{DB: db}
 }
 
+// FUNCTION: To remove a book from the database
+func (r *BookRepository) RemoveBook(id int) (error) {
+	result, err := r.DB.Exec("DELETE FROM books WHERE id = ?", id)
+	if err != nil {
+		log.Printf("ERROR: Failed to execute DELETE query: %v", err)
+		return err
+	}
+
+	// Check that rows were affected
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// Warning if it failed to delete 
+	if rowsAffected == 0 {
+		log.Printf("Warning: Attempted to delete a row but no rows were affected: %v", err)
+	}
+
+	return nil;
+}
+
 // FUNCTION: for returning all books in the database
 func (r *BookRepository) GetAllBooks() ([]models.Book, error) {
 	// SQL Query logic
