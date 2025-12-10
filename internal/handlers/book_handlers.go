@@ -41,6 +41,7 @@ func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
 
 // Handles deleting a book
 func (h *BookHandler) RemoveBookHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handling request to: %s from %s", r.URL.Path, r.RemoteAddr)
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
