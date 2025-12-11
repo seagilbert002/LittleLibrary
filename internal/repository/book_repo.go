@@ -126,3 +126,43 @@ func (r *BookRepository) AddBook(book models.Book) (error) {
 	log.Printf("Book Inserted with ID: %d", insertedId)
 	return nil
 }
+
+// FUNCTION: updates an existing book row
+func (r *BookRepository) UpdateBook(book models.Book) (error) {
+	stmt, err := r.DB.Prepare("UPDATE books SET title = ?, author = ?, first_name = ?, last_name = ?, genre = ?, series = ?, description = ?, publish_date = ?, publisher = ?, ean_isbn = ?, upc_isbn = ?, pages = ?, ddc = ?, cover_style = ?, sprayed_edges = ?, special_ed = ?, first_ed = ?, signed = ?, location = ? WHERE id = ?")
+	if err != nil {
+		log.Printf("Error preparing statement: %v", err)
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(
+		book.Title,
+		book.Author,
+		book.AuthorFirst,
+		book.AuthorLast,
+		book.Genre,
+		book.Series,
+		book.Description,
+		book.PublishDate,
+		book.Publisher,
+		book.EanIsbn,
+		book.UpcIsbn,
+		book.Pages,
+		book.Ddc,
+		book.CoverStyle,
+		book.SprayedEdges,
+		book.SpecialEd,
+		book.FirstEd,
+		book.Signed,
+		book.Location,
+		book.Id,
+	)
+	if err != nil {
+		log.Printf("Book update failed: %v", err)
+		return err
+	}
+
+	log.Printf("Book Updated with ID: %v", book.Id)
+	return nil
+}

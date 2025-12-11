@@ -50,7 +50,7 @@ func main() {
 	http.HandleFunc("/add_book", bookHandler.AddBookHandler)
 	http.HandleFunc("/remove_book/", bookHandler.RemoveBookHandler)
 
-	// RUN SERVER
+	// ***** RUN SERVER *****
     // Lets the admin know the server is running
 	hostPort := os.Getenv("HOST_PORT")
     fmt.Println("Server running on http://localhost:" + hostPort)
