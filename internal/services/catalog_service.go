@@ -14,6 +14,7 @@ type BookRepository interface {
 	AddBook(models.Book) (error)
 	GetBookById(id int) (*models.Book, error)
 	RemoveBook(id int) (error)
+	UpdateBook(models.Book) (error)
 }
 
 // Catalog Service struct for business logic
@@ -28,6 +29,67 @@ func NewCatalogService(repo BookRepository) *CatalogService {
 
 func (s *CatalogService) GetAllBooks() ([]models.Book, error) {
 	return s.Repo.GetAllBooks()
+}
+
+func (s *CatalogService) UpdateBook(bookData url.Values) error {
+	idStr := bookData.Get("id")
+	if idStr == "" {
+		return errors.New("no book id given")
+	}
+	
+	// Convert and validate required fields
+	// TODO: add more validations
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return errors.New("invalid format for id")
+	}
+
+	if bookData.Get("title") == "" {
+		return errors.New("book title is required")
+	}
+	if bookData.Get("pages") == "" {
+		return errors.New("book page numbers is required")
+	}
+	if bookData.Get("location") == "" {
+		return errors.New("book location is required")
+	}
+
+	// Transform data if needed here
+	pagesStr := bookData.Get("pages")
+	var pages uint16
+
+	if pagesStr != "" {
+		p, err := strconv.ParseUint(pagesStr, 10, 16)
+		if err != nil {
+			return errors.New("pages must be a valid number")
+		}
+		pages = uint16(p)
+	}
+	// Assembling the Model
+	book := models.Book{
+		Id:				id,
+		Title: 			bookData.Get("title"),
+		Author:			bookData.Get("author"),
+		AuthorFirst:	bookData.Get("first_name"),
+		AuthorLast:		bookData.Get("last_name"),
+		Genre:			bookData.Get("genre"),
+		Series:			bookData.Get("series"),
+		Description:	bookData.Get("description"),
+		PublishDate:	bookData.Get("publish_date"),
+		Publisher:		bookData.Get("publisher"),
+		EanIsbn:		bookData.Get("ean_isbn"),
+		UpcIsbn:		bookData.Get("upc_isbn"),
+		Pages:			pages,
+		Ddc:			bookData.Get("ddc"),
+		CoverStyle:		bookData.Get("cover_style"),
+		SprayedEdges:	bookData.Get("sprayed_edges") == "on",
+		SpecialEd:		bookData.Get("special_ed") == "on",
+		FirstEd:		bookData.Get("first_ed") == "on",
+		Signed:			bookData.Get("signed") == "on",
+		Location:		bookData.Get("location"),
+	}
+
+	return s.Repo.UpdateBook(book)
 }
 
 func (s *CatalogService) RemoveBook(id int) (error) {
