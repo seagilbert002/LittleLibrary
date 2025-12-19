@@ -131,31 +131,61 @@ func (h *BookHandler) AddBookHandler(w http.ResponseWriter, r *http.Request) {
 // Handles the updating of a book and posting the book
 func (h *BookHandler) UpdateBookHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
-	if r.Method == http.MethodGet {
-		tmpl, err := template.ParseFiles("web/templates/pages/update_book.html")
-		if err != nil {
-			log.Printf("Error rendering template: %v", err)
-			http.Error(w, "Error rendering form", http.StatusInternalServerError)
-			return
-		}
-		tmpl.Execute(w, nil)
-	} else if r.Method == http.MethodPost {
-		err := r.ParseForm()
-		if err != nil {
-			log.Printf("Error parsing bookform: %v ", err)
-			http.Error(w, "Error parsing form", http.StatusBadRequest)
-			return
-		}
-		// Call the service that validates the book
-		err = h.Catalog.UpdateBook(r.Form)
+	switch r.Method {
+		case http.MethodGet: 
+			tmpl, err := template.ParseFiles("web/templates/pages/update_book.html")
+			if err != nil {
+				log.Printf("Error rendering template: %v", err)
+				http.Error(w, "Error rendering form", http.StatusInternalServerError)
+				return
+			}
+			tmpl.Execute(w, nil)
 
-		if err != nil {
-			http.Error(w, "Failed to update book", http.StatusInternalServerError)
-			return
-		}
+		case http.MethodPost:
+			err := r.ParseForm()
+			if err != nil {
+				log.Printf("Error parsing bookform: %v ", err)
+				http.Error(w, "Error parsing form", http.StatusBadRequest)
+				return
+			}
+			// Call the service that validates the book
+			err = h.Catalog.UpdateBook(r.Form)
 
-		http.Redirect(w, r, "/books", http.StatusSeeOther)
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			if err != nil {
+				http.Error(w, "Failed to update book", http.StatusInternalServerError)
+				return
+			}
+
+			http.Redirect(w, r, "/books", http.StatusSeeOther)	
+		
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
+	// if r.Method == http.MethodGet {
+	// 	tmpl, err := template.ParseFiles("web/templates/pages/update_book.html")
+	// 	if err != nil {
+	// 		log.Printf("Error rendering template: %v", err)
+	// 		http.Error(w, "Error rendering form", http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	tmpl.Execute(w, nil)
+	// } else if r.Method == http.MethodPost {
+	// 	err := r.ParseForm()
+	// 	if err != nil {
+	// 		log.Printf("Error parsing bookform: %v ", err)
+	// 		http.Error(w, "Error parsing form", http.StatusBadRequest)
+	// 		return
+	// 	}
+	// 	// Call the service that validates the book
+	// 	err = h.Catalog.UpdateBook(r.Form)
+	//
+	// 	if err != nil {
+	// 		http.Error(w, "Failed to update book", http.StatusInternalServerError)
+	// 		return
+	// 	}
+	//
+	// 	http.Redirect(w, r, "/books", http.StatusSeeOther)
+	// } else {
+	// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	// }
 }
