@@ -133,13 +133,27 @@ func (h *BookHandler) UpdateBookHandler(w http.ResponseWriter, r *http.Request) 
 	log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
 	switch r.Method {
 		case http.MethodGet: 
-			tmpl, err := template.ParseFiles("web/templates/pages/update_book.html")
+			bookIdString := strings.TrimPrefix(r.URL.Path, "/edit_book/")
+			bookId, err := strconv.Atoi(bookIdString)
 			if err != nil {
-				log.Printf("Error rendering template: %v", err)
-				http.Error(w, "Error rendering form", http.StatusInternalServerError)
+				http.Error(w, "Invalid book ID", http.StatusBadRequest)
 				return
 			}
-			tmpl.Execute(w, nil)
+	
+			// Call the corresponding service
+			book, err := h.Catalog.GetBookById(bookId)
+			if err != nil {
+				http.Error(w, "Failed to load book", http.StatusInternalServerError)
+				return
+			}
+
+			// Render the template
+			tmpl, err := template.ParseFiles("web/templates/pages/edit_book.html")
+			if err != nil {
+				http.Error(w, "Error rendering template", http.StatusInternalServerError)
+				return
+			}
+			tmpl.Execute(w, book)
 
 		case http.MethodPost:
 			err := r.ParseForm()
@@ -157,35 +171,8 @@ func (h *BookHandler) UpdateBookHandler(w http.ResponseWriter, r *http.Request) 
 			}
 
 			http.Redirect(w, r, "/books", http.StatusSeeOther)	
-		
+
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
-	// if r.Method == http.MethodGet {
-	// 	tmpl, err := template.ParseFiles("web/templates/pages/update_book.html")
-	// 	if err != nil {
-	// 		log.Printf("Error rendering template: %v", err)
-	// 		http.Error(w, "Error rendering form", http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// 	tmpl.Execute(w, nil)
-	// } else if r.Method == http.MethodPost {
-	// 	err := r.ParseForm()
-	// 	if err != nil {
-	// 		log.Printf("Error parsing bookform: %v ", err)
-	// 		http.Error(w, "Error parsing form", http.StatusBadRequest)
-	// 		return
-	// 	}
-	// 	// Call the service that validates the book
-	// 	err = h.Catalog.UpdateBook(r.Form)
-	//
-	// 	if err != nil {
-	// 		http.Error(w, "Failed to update book", http.StatusInternalServerError)
-	// 		return
-	// 	}
-	//
-	// 	http.Redirect(w, r, "/books", http.StatusSeeOther)
-	// } else {
-	// 	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	// }
 }
