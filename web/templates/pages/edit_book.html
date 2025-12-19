@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Edit Book: {{ .Title }}</title>
+    </head>
+    <body>
+        <h1>Edit Book: {{ .Title }}</h1>
+        <form method="POST" action="/edit_book/{{ .Id }}">
+
+            <input type="hidden" name="id" value="{{ .Id }}">
+
+            <label for="title">Title (Required):</label>
+            <input type="text" id="title" name="title" value="{{ .Title }}" required>
+
+            <label for="author">Author (Separate First and Last Name below):</label>
+            <input type="text" id="author" name="author" value="{{ .Author }}"><br><br>
+
+
+            <label for="first_name">Author First Name (Required):</label>
+            <input type="text" id="first_name" name="first_name" value="{{ .AuthorFirst }}">
+
+            <label for="last_name">Author Last Name (Required):</label>
+            <input type="text" id="last_name" name="last_name" value="{{ .AuthorLast }}">
+
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" value="{{ .Genre }}">
+
+            <label for="series">Series:</label>
+            <input type="text" id="series" name="series" value="{{ .Series }}">
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" cols="50">{{ .Description }}</textarea>
+
+            <label for="publish_date">Publish Date:</label>
+            <input type="date" id="publish_date" name="publish_date" value="{{ .PublishDate }}">
+
+            <label for="publisher">Publisher:</label>
+            <input type="text" id="publisher" name="publisher" value="{{ .Publisher }}">
+
+            <label for="ean_isbn">EAN/ISBN:</label>
+            <input type="text" id="ean_isbn" name="ean_isbn" value="{{ .EanIsbn }}">
+
+            <label for="upc_isbn">UPC/ISBN:</label>
+            <input type="text" id="upc_isbn" name="upc_isbn" value="{{ .UpcIsbn }}">
+
+            <label for="pages">Pages:</label>
+            <input type="number" id="pages" name="pages" value="{{ .Pages }}">
+
+            <label for="ddc">DDC (Dewey Decimal Classification):</label>
+            <input type="text" id="ddc" name="ddc" value="{{ .Ddc }}">
+
+            <label for="location">Location (Required):</label>
+            <input type="text" id="location" name="location" value="{{ .Location }}" required>
+
+            <label for="cover_style">Cover Style:</label>
+            <select id="cover_style" name="cover_style">
+                <option value="">Select Cover Style</option>
+                <option value="Paperback" {{ if eq .CoverStyle "Paperback" }}selected{{ end }}>Paperback</option>
+                <option value="Hardback" {{ if eq .CoverStyle "Hardback" }}selected{{ end }}>Hardback</option>
+                <option value="Other" {{ if eq .CoverStyle "Other" }}selected{{ end }}>Other</option>
+            </select><br><br>
+
+            <div class="checkbox-group">
+                <h3>Special Attributes</h3>
+
+                <label>
+                    <input type="checkbox" id="sprayed_edges" name="sprayed_edges" {{ if .SprayedEdges }}checked{{ end }}>
+                    Sprayed Edges
+                </label>
+
+                <label>
+                    <input type="checkbox" id="special_ed" name="special_ed" {{ if .SpecialEd }}checked{{ end }}>
+                    Special Edition
+                </label>
+
+                <label>
+                    <input type="checkbox" id="first_ed" name="first_ed" {{ if .FirstEd }}checked{{ end }}>
+                    First Edition
+                </label>
+
+                <label>
+                    <input type="checkbox" id="signed" name="signed" {{ if .Signed }}checked{{ end }}>
+                    Signed
+                </label>
+            </div>
+            <br>
+
+            <input type="submit" value="Save Changes">
+        </form>
+    </body>
+</html>
