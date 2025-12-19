@@ -43,12 +43,14 @@ func main() {
 	bookHandler := handlers.NewBookHandler(catalogService)
 
 	// ***** Define Routes ******
+	// General Routes
 	http.HandleFunc("/", genralHandler.IndexHandler)
 	// Book Routes
     http.HandleFunc("/books", bookHandler.BooksHanlder)
 	http.HandleFunc("/display_book/", bookHandler.BookDisplayHandler)
 	http.HandleFunc("/add_book", bookHandler.AddBookHandler)
 	http.HandleFunc("/remove_book/", bookHandler.RemoveBookHandler)
+	http.HandleFunc("/edit_book/", bookHandler.UpdateBookHandler)
 
 	// ***** RUN SERVER *****
     // Lets the admin know the server is running
