@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/seagilbert002/LittleLibrary/internal/services"
+	"github.com/seagilbert002/LittleLibrary/internal/templates/components"
 )
 
 // Book Handler will require a service
@@ -31,12 +32,15 @@ func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    tmpl, err := template.ParseFiles("web/templates/pages/books.html")
-    if err != nil {
-        http.Error(w, "Error rendering template", http.StatusInternalServerError)
-        return
-    }
-    tmpl.Execute(w, books)
+	component := components.BooksList(books)
+	component.Render(r.Context(), w)
+
+    // tmpl, err := template.ParseFiles("web/templates/pages/books.html")
+    // if err != nil {
+    //     http.Error(w, "Error rendering template", http.StatusInternalServerError)
+    //     return
+    // }
+    // tmpl.Execute(w, books)
 }
 
 // Handles deleting a book
