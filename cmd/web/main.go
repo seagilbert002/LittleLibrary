@@ -41,12 +41,13 @@ func main() {
 	// ----Handlers----
 	genralHandler := handlers.NewGeneralHandler()
 	bookHandler := handlers.NewBookHandler(catalogService)
+	
 
 	// ***** Define Routes ******
 	// General Routes
 	http.HandleFunc("/", genralHandler.IndexHandler)
 	// Book Routes
-    http.HandleFunc("/books", bookHandler.BooksHanlder)
+    http.HandleFunc("/books", bookHandler.BooksListHanlder)
 	http.HandleFunc("/display_book/", bookHandler.BookDisplayHandler)
 	http.HandleFunc("/add_book", bookHandler.AddBookHandler)
 	http.HandleFunc("/remove_book/", bookHandler.RemoveBookHandler)

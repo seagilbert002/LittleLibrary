@@ -1,0 +1,67 @@
+package components
+
+import (
+    "github.com/seagilbert002/LittleLibrary/internal/models"
+    
+    "strconv"
+    )
+
+templ DisplayBook(book *models.Book) {
+    @Base("Book Details") {
+        <a href={templ.SafeURL("/books")}>Back to List</a>
+        <div id="book" class="book">
+            <div class="book-item">
+                <h2>{book.Title}</h2>
+                <p>Author: {book.Author}</p>
+                <p>Published: {book.PublishDate}</p>
+                <p>Genre: {book.Genre}</p>
+                <p>Series: {book.Series}</p>
+                <p>Description: {book.Description}</p>
+                <p>Date Published: {book.PublishDate}</p>
+                <p>Publisher: {book.Publisher}</p>
+                <p>EAN/ISBN: {book.EanIsbn}</p>
+                <p>UPC/ISBN: {book.UpcIsbn}</p>
+                <p>Pages: {book.Pages}</p>
+                <p>DDC: {book.Ddc}</p>
+                <p>Cover Style: {book.CoverStyle}</p>
+                if book.SprayedEdges {
+                    <p>Sprayed Edges: Yes</p>
+                } else {
+                    <p>Sprayed Edges: No</p>
+                }
+
+                if book.SpecialEd {
+                    <p>Special Edition: Yes</p>
+                } else {
+                    <p>Special Edition: No</p>
+                }
+
+                if book.FirstEd {
+                    <p>First Edition: Yes</p>
+                } else {
+                    <p>First Edition: No</p>
+                }
+ 
+                if book.Signed {
+                    <p>Signed: Yes</p>
+                } else {
+                    <p>Signed: No</p>
+                }               
+                <p>Location: {book.Location}</p>
+            </div>
+        </div>
+        <div id="book-actions" class="book-actions">
+            <a href={templ.SafeURL("/edit_book/" + strconv.Itoa(book.Id))}>
+                <button type="button">
+                    Edit Book Details
+                </button>
+            </a>
+
+            <form method="POST" action={templ.SafeURL("/remove_book/" + strconv.Itoa(book.Id))}>
+                <button type="submit">
+                    DELETE This book
+                </button>
+            </form>
+        </div>
+    }
+}

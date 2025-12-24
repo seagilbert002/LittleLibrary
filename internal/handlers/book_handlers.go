@@ -22,7 +22,7 @@ func NewBookHandler(s *services.CatalogService) *BookHandler {
 }
 
 // Handles the books page for displaying the books in the database
-func  (h *BookHandler) BooksHanlder (w http.ResponseWriter, r *http.Request) {
+func  (h *BookHandler) BooksListHanlder (w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
 	
 	// Call the service
@@ -88,13 +88,16 @@ func (h *BookHandler) BookDisplayHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+
+	component := components.DisplayBook(book)
+	component.Render(r.Context(), w)
 	// Render the template
-	tmpl, err := template.ParseFiles("web/templates/pages/display_book.html")
-	if err != nil {
-        http.Error(w, "Error rendering template", http.StatusInternalServerError)
-		return
-	}
-	tmpl.Execute(w, book)
+	// tmpl, err := template.ParseFiles("web/templates/pages/display_book.html")
+	// if err != nil {
+	//        http.Error(w, "Error rendering template", http.StatusInternalServerError)
+	// 	return
+	// }
+	// tmpl.Execute(w, book)
 }
 
 // Handles the Add Book Form and Posting the book
