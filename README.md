@@ -15,7 +15,27 @@ This project leverages the power of:
 - **Type Safety:** Components-based UI ensures data integrity from the database to the browser.
 - **Layered Architecture:** Clear separationbetween Repository, Service, and Handler layers.
 
-## Prerequities
-Before running this project, you will need the following installed:
+## Essentials
+The following are all the essential tools used to make this project:
 - [Go](go.dev) 1.21 or higher
+- [Templ CLI](https://templ.guide/)
+- [Node.js](https://nodejs.org/en)
+- [MariaDB](https://mariadb.org/)
+- [HTMX](https://htmx.org/)
 
+## Project Structure
+As this was a personal project for growth I would also like to layout my project structure:
+
+```
+LittleLibrary/
+├── cmd/                # Main entry point
+├── internal/
+│   ├── db/             # Database initialization
+│   ├── handlers/       # HTTP logic and routing
+│   ├── models/         # Struct definitions for Books
+│   ├── repository/     # SQL Queries and DB interaction
+│   ├── services/       # Business logic and validation
+│   └── templates/      # Templ components and layouts
+├── static/             # CSS, Images, and HTMX scripts
+└── web/static/         # HTMX import file
+```
