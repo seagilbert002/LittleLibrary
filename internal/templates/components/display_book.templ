@@ -2,12 +2,13 @@ package components
 
 import (
     "github.com/seagilbert002/LittleLibrary/internal/models"
+    "github.com/seagilbert002/LittleLibrary/internal/templates"
     
     "strconv"
     )
 
 templ DisplayBook(book *models.Book) {
-    @Base("Book Details") {
+    @templates.Layout("Book Details") {
         <a href={templ.SafeURL("/books")}>Back to List</a>
         <div id="book" class="book">
             <div class="book-item">

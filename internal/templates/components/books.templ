@@ -2,12 +2,13 @@ package components
 
 import (
     "github.com/seagilbert002/LittleLibrary/internal/models"
+    "github.com/seagilbert002/LittleLibrary/internal/templates"
     
     "strconv"
 )
 
 templ BooksList(books []models.Book) {
-    @Base("Little Library: Collection") {
+    @templates.Layout("Little Library: Collection") {
         <div id="book-list" class="book-list">
             for _, book := range books {
                 <div class="book-item">

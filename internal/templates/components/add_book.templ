@@ -2,12 +2,13 @@
 
 import (
     "github.com/seagilbert002/LittleLibrary/internal/models"
+    "github.com/seagilbert002/LittleLibrary/internal/templates"
     
     "strconv"
     )
 
 templ AddBook(book *models.Book) {
-    @Base("Book Details") {
+    @templates.Layout("Book Details") {
         
     }
 }

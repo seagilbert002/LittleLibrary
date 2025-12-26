@@ -44,6 +44,8 @@ func main() {
 	
 
 	// ***** Define Routes ******
+	// Static File Routes
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 	// General Routes
 	http.HandleFunc("/", genralHandler.IndexHandler)
 	// Book Routes
