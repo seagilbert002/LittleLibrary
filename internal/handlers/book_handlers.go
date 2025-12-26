@@ -4,9 +4,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strings"
 	"strconv"
+	"strings"
 
+	"github.com/seagilbert002/LittleLibrary/internal/models"
 	"github.com/seagilbert002/LittleLibrary/internal/services"
 	"github.com/seagilbert002/LittleLibrary/internal/templates/components"
 )
@@ -22,7 +23,7 @@ func NewBookHandler(s *services.CatalogService) *BookHandler {
 }
 
 // Handles the books page for displaying the books in the database
-func  (h *BookHandler) BooksListHanlder (w http.ResponseWriter, r *http.Request) {
+func  (h *BookHandler) BooksListHandler (w http.ResponseWriter, r *http.Request) {
     log.Printf("Handling request to: %s from: %s", r.URL.Path, r.RemoteAddr)
 	
 	// Call the service
@@ -32,7 +33,7 @@ func  (h *BookHandler) BooksListHanlder (w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	component := components.BooksList(books)
+	component := components.Books(books)
 	component.Render(r.Context(), w)
 
     // tmpl, err := template.ParseFiles("web/templates/pages/books.html")
@@ -182,4 +183,26 @@ func (h *BookHandler) UpdateBookHandler(w http.ResponseWriter, r *http.Request) 
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
+}
+
+// Searches for books by title and author
+func (h *BookHandler) SearchBooks(w http.ResponseWriter, r *http.Request) {
+	query := strings.ToLower(r.URL.Query().Get("search"))
+	var results []models.Book
+
+	// Call the service
+	books, err := h.Catalog.GetAllBooks()
+	if err != nil {
+		http.Error(w, "Failed to loade book catalog", http.StatusInternalServerError)
+		return
+	}
+
+
+	for _, book := range books {
+		if strings.Contains(strings.ToLower(book.Author), query) || strings.Contains(strings.ToLower(book.Title), query) {
+			results = append(results, book)
+		}
+	}
+	
+	components.BooksList(results).Render(r.Context(), w)
 }

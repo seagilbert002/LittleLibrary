@@ -49,11 +49,12 @@ func main() {
 	// General Routes
 	http.HandleFunc("/", genralHandler.IndexHandler)
 	// Book Routes
-    http.HandleFunc("/books", bookHandler.BooksListHanlder)
+    http.HandleFunc("/books", bookHandler.BooksListHandler)
 	http.HandleFunc("/display_book/", bookHandler.BookDisplayHandler)
 	http.HandleFunc("/add_book", bookHandler.AddBookHandler)
 	http.HandleFunc("/remove_book/", bookHandler.RemoveBookHandler)
 	http.HandleFunc("/edit_book/", bookHandler.UpdateBookHandler)
+	http.HandleFunc("/search", bookHandler.SearchBooks)
 
 	// ***** RUN SERVER *****
     // Lets the admin know the server is running

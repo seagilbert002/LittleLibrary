@@ -7,19 +7,38 @@ import (
     "strconv"
 )
 
-templ BooksList(books []models.Book) {
+templ Books(books []models.Book) {
     @templates.Layout("Little Library: Collection") {
-        <div id="book-list" class="book-list">
-            for _, book := range books {
-                <div class="book-item">
-                    <h2>
-                    <a href={templ.SafeURL("/display_book/" + strconv.Itoa(book.Id))}>{book.Title}</a>
-                    </h2>
-                    <p>Author: {book.Author}</p>
-                    <p>Published: {book.PublishDate}</p>
-                    <p>Location: {book.Location}</p>
-                    </div>
-            }
+        <div class="search">
+            <input  
+                type="search"
+                name="search"
+                hx-get="/search"
+                hx-trigger="keyup changed delay:1s"
+                hx-target="#book-list"
+            />
         </div>
+
+        @BooksList(books)
     }
+}
+
+templ BookCard(book models.Book) {
+            <div class="book-item">
+                <h2>
+                <a href={templ.SafeURL("/display_book/" + strconv.Itoa(book.Id))}>{book.Title}</a>
+                </h2>
+                <p>Author: {book.Author}</p>
+                <p>Published: {book.PublishDate}</p>
+                <p>Location: {book.Location}</p>
+            </div>
+}
+
+templ BooksList(books []models.Book) {
+    <div id="book-list" class="book-list">
+        for _, book := range books {
+            @BookCard(book)
+        }
+    </div>
+
 }
